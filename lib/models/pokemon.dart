@@ -5,7 +5,7 @@ class PokeHub {
 
   PokeHub.fromJson(Map<String, dynamic> json) {
     if (json['pokemon'] != null) {
-      pokemon = new List<Pokemon>();
+      pokemon = <Pokemon>[];
       json['pokemon'].forEach((v) {
         pokemon.add(new Pokemon.fromJson(v));
       });
@@ -37,25 +37,28 @@ class Pokemon {
   String spawnTime;
   List<double> multipliers;
   List<String> weaknesses;
+  List<NextEvolution> previousEvolution;
   List<NextEvolution> nextEvolution;
 
-  Pokemon(
-      {this.id,
-      this.num,
-      this.name,
-      this.img,
-      this.type,
-      this.height,
-      this.weight,
-      this.candy,
-      this.candyCount,
-      this.egg,
-      this.spawnChance,
-      this.avgSpawns,
-      this.spawnTime,
-      this.multipliers,
-      this.weaknesses,
-      this.nextEvolution});
+  Pokemon({
+    this.id,
+    this.num,
+    this.name,
+    this.img,
+    this.type,
+    this.height,
+    this.weight,
+    this.candy,
+    this.candyCount,
+    this.egg,
+    this.spawnChance,
+    this.avgSpawns,
+    this.spawnTime,
+    this.multipliers,
+    this.weaknesses,
+    this.previousEvolution,
+    this.nextEvolution,
+  });
 
   Pokemon.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -74,9 +77,15 @@ class Pokemon {
     multipliers = json['multipliers']?.cast<double>();
     weaknesses = json['weaknesses'].cast<String>();
     if (json['next_evolution'] != null) {
-      nextEvolution = new List<NextEvolution>();
+      nextEvolution = <NextEvolution>[];
       json['next_evolution'].forEach((v) {
         nextEvolution.add(new NextEvolution.fromJson(v));
+      });
+    }
+    if (json['prev_evolution'] != null) {
+      previousEvolution = <NextEvolution>[];
+      json['prev_evolution'].forEach((v) {
+        previousEvolution.add(new NextEvolution.fromJson(v));
       });
     }
   }
@@ -101,6 +110,10 @@ class Pokemon {
     if (this.nextEvolution != null) {
       data['next_evolution'] =
           this.nextEvolution.map((v) => v.toJson()).toList();
+    }
+    if (this.previousEvolution != null) {
+      data['previous_evolution'] =
+          this.previousEvolution.map((v) => v.toJson()).toList();
     }
     return data;
   }
